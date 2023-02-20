@@ -117,7 +117,7 @@ func UpdateAluno(ctx *gin.Context) {
 		return
 	}
 
-	database.DB.Model(&aluno).Updates(aluno)
+	database.DB.Model(&aluno).Where("id = ?", id).Updates(aluno)
 
 	ctx.JSON(http.StatusOK, aluno)
 }
