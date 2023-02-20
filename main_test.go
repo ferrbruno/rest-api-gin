@@ -86,6 +86,32 @@ func TestGetAlunoById(t *testing.T) {
 	}
 }
 
+func TestGetAlunoByCPF(t *testing.T) {
+	assert := assert.New(t)
+	r := SetupTestRoutes()
+
+	CreateAlunoMock()
+	defer DeleteAlunoMock()
+
+	path := "/alunos/cpf/" + aluno.CPF
+	req, _ := http.NewRequest(http.MethodGet, path, nil)
+	response := httptest.NewRecorder()
+
+	r.ServeHTTP(response, req)
+
+	assert.Equal(http.StatusOK, response.Code)
+
+	var alunoMock models.Aluno
+
+	json.Unmarshal(response.Body.Bytes(), &alunoMock)
+
+	if assert.NotNil(alunoMock) {
+		assert.Equal(aluno.Nome, alunoMock.Nome)
+		assert.Equal(aluno.CPF, alunoMock.CPF)
+		assert.Equal(aluno.RG, alunoMock.RG)
+	}
+}
+
 func TestUpdateAluno(t *testing.T) {
 	assert := assert.New(t)
 	r := SetupTestRoutes()
